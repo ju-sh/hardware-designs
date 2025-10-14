@@ -27,5 +27,27 @@ interface slave_if #(
     logic err_o;
     logic rty_i;
 
+    modport slave_mp (
+        input clk_i;
+        input rst_i;
+        input dat_i;
+        input tgd_i;
+        input adr_i;
+        input cyc_i;
+        input lock_i;
+        input sel_i;
+        input stb_i;
+        input tga_i;
+        input tgc_i;
+        input we_i;
+
+        output dat_o;
+        output tgd_o;
+        output ack_o;
+        output stall_o;
+        output err_o;
+        output rty_i;
+    );
+
 endinterface
 

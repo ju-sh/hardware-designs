@@ -28,6 +28,28 @@ interface master_if #(
     logic tgc_o;
     logic we_o;
 
+    modport master_mp (
+        input clk_i;
+        input rst_i;
+        input dat_i;
+        input tgd_i;
+        input ack_i;
+        input stall_i;
+        input err_i;
+        input rty_i;
+       
+        output dat_o;
+        output tgd_o;
+        output adr_o;
+        output cyc_o;
+        output lock_o;
+        output sel_o;
+        output stb_o;
+        output tga_o;
+        output tgc_o;
+        output we_o;
+    );
+
 endinterface
 
 
