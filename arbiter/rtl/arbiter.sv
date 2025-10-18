@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-// `include "arbiter_if.sv"
+`include "arbiter_if.sv"
 
 module arbiter #(parameter int COUNT = 4) (
     arbiter_if.dut arb_if
@@ -37,6 +37,7 @@ module arbiter #(parameter int COUNT = 4) (
             cur_idx <= '0;
             //nxt_idx <= '0;
             state <= IDLE;
+            arb_if.grt <= '0;
         end else begin
             unique case(state)
                 IDLE: begin
@@ -48,19 +49,26 @@ module arbiter #(parameter int COUNT = 4) (
                     end else begin
                         // No one needs access
                         arb_if.grt <= '0;
+                        cur_idx <= '0; // RED
+                        state <= IDLE; // RED
                     end
                 end
                 BUSY: begin
+                    // There is an outstanding grant
                     if (|(arb_if.grt & arb_if.ack)) begin
-                    /* if (|((arb_if.grt >> cur_idx) & 1)) begin */
+                        // There is an ack for the outstanding grant  
                         if(!(|nxt_idx)) begin
                             // No other requests
-                            arb_if.grt <= '0;
                             state <= IDLE;
+                            cur_idx <= '0; // RED
+                            arb_if.grt <= '0;
                         end else begin
                             arb_if.grt <= nxt_idx;
                             cur_idx <= $clog2(nxt_idx);
+                            state <= BUSY; // RED
                         end
+                    end else begin
+                        state <= BUSY; // RED
                     end
                 end
                 /* default: begin */

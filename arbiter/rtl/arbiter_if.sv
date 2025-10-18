@@ -20,17 +20,14 @@ interface arbiter_if #(
         output grt
     );
 
-    /* modport tb ( */
-    /*     output req, */
-    /*     input grt, */
-    /*     input clk, rst */
-
-    /*     input clk, */
-    /*     input rst, */
-    /*     input req, */
-    /*     input ack, */
-    /*     output grt */
-    /* ); */
+  
+    modport tb (
+        output clk,
+        output rst,
+        output req,
+        output ack,
+        input grt
+    );
 
 endinterface
 
