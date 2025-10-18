@@ -26,7 +26,7 @@ module arbiter #(parameter int COUNT = 4) (
         for(int i=0; i<COUNT; ++i) begin
             automatic int idx = (cur_idx + i + 1) %  COUNT;
             if(arb_if.req[idx]) begin
-                nxt_idx = idx;
+                nxt_idx = 1 << idx;
                 break;
             end
         end
@@ -34,7 +34,7 @@ module arbiter #(parameter int COUNT = 4) (
 
     always_ff @(posedge arb_if.clk or posedge arb_if.rst) begin
         if (arb_if.rst) begin
-            arb_if.cur_idx <= '0;
+            cur_idx <= '0;
             //nxt_idx <= '0;
             state <= IDLE;
         end else begin
@@ -51,9 +51,11 @@ module arbiter #(parameter int COUNT = 4) (
                     end
                 end
                 BUSY: begin
-                    if (|((arb_if.grt >> cur_idx) & 1)) begin
+                    if (|(arb_if.grt & arb_if.ack)) begin
+                    /* if (|((arb_if.grt >> cur_idx) & 1)) begin */
                         if(!(|nxt_idx)) begin
                             // No other requests
+                            arb_if.grt <= '0;
                             state <= IDLE;
                         end else begin
                             arb_if.grt <= nxt_idx;
