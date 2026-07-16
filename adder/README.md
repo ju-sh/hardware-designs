@@ -1,4 +1,4 @@
-# 4-bit Adder
+# Adder
 
 A bare minimal demo to demonstrate basic workflow in a design using UVM testbench.
 
